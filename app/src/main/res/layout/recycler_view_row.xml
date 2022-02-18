@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:background="@drawable/button_blue"
+
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:layout_margin="2dp"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    tools:targetApi="p">
+
+    <TextView
+
+        android:text="kanji"
+        android:id="@+id/kanji"
+        android:layout_width="200dp"
+        android:layout_height="30dp"
+        android:textColor="@color/black"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="20sp"
+        android:padding="2dp"
+        android:background="@color/design_default_color_background"
+        />
+    <TextView
+        android:id="@+id/rtv1"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="14sp"
+        android:padding="2dp"
+        android:background="#E1E9F0"
+         />
+
+
+</LinearLayout>

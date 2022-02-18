@@ -62,12 +62,12 @@ public class SentenceSearch {
                         {
                             JSONObject sen = new JSONObject();
                             try {
-                                sen.put("jpsen", testdata.getString(0));
+                                sen.put("en_sen", testdata.getString(0));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                             try {
-                                sen.put("ensen", testdata.getString(1));
+                                sen.put("jp_sen", testdata.getString(1));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -99,6 +99,7 @@ public class SentenceSearch {
 
 
     public void getResult(String searchQuery){
+        skip=0;
         getResult(searchQuery,limit,skip);
     }
 

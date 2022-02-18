@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -22,9 +23,51 @@ import androidx.core.app.NotificationCompat;
 import com.hiddenDimension.thoughtmapper.R;
 import com.hiddenDimension.thoughtmapper.UiDbFetcher;
 
+import java.util.HashMap;
+import java.util.Locale;
+
 //this only keeps alive the app, the one and only soul
 //it's like a heart , if it stops the brain doesn't work long
 public class CoreService extends Service {
+
+    TextToSpeech ttsEn;  //class field
+    TextToSpeech ttsJp;  //class field
+
+    private void textToSpeechEn(String text) {
+        final String toSpeak =text;
+        final int mode = TextToSpeech.QUEUE_FLUSH;
+        final HashMap<String, String> hashMap = new HashMap<String, String>();
+
+        ttsEn = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+
+                    ttsEn.setLanguage(Locale.US);
+                    ttsEn.speak(toSpeak, mode, hashMap);
+                }
+            }
+        });
+    }
+
+    private void textToSpeechJp(String text) {
+        final String toSpeak =text;
+        final int mode = TextToSpeech.QUEUE_FLUSH;
+        final HashMap<String, String> hashMap = new HashMap<String, String>();
+
+        ttsJp = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+
+                    ttsJp.setLanguage(Locale.JAPAN);
+                    ttsJp.speak(toSpeak, mode, hashMap);
+                }
+            }
+        });
+    }
 
     private static BroadcastReceiver br_ScreenOffReceiver;
 
@@ -47,6 +90,10 @@ public class CoreService extends Service {
             public synchronized void run() {
 
                 uiDbFetcher.openConnection();
+
+                textToSpeechJp(uiDbFetcher.getTodayWord());
+                textToSpeechEn(uiDbFetcher.searchWord());
+
                 registerScreenOffReceiver(uiDbFetcher.getTodayWord(),uiDbFetcher.searchWord());
                 uiDbFetcher.closeConnection();
 

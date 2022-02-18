@@ -4,9 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.hiddenDimension.thoughtmapper.databaseImporter.KnowledgeBaseAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.Random;
 
 public class UiDbFetcher {
@@ -21,13 +27,12 @@ public class UiDbFetcher {
 
         mDbHelper = new KnowledgeBaseAdapter(mContext);
         mDbHelper.createDatabase();
-        random= new Random(3000);
-
+        random = new Random(3000);
 
 
     }
 
-    public void openConnection(){
+    public void openConnection() {
         try {
             mDbHelper.open();
         } catch (java.sql.SQLException throwables) {
@@ -35,9 +40,9 @@ public class UiDbFetcher {
         }
     }
 
-    public void closeConnection(){
+    public void closeConnection() {
 
-            mDbHelper.close();
+        mDbHelper.close();
 
     }
 
@@ -71,22 +76,23 @@ public class UiDbFetcher {
         return words;
     }
 
-    String tv_wrd="";
+    String tv_wrd = "";
+
     public String searchWord() {
         Cursor x = mDbHelper.searchWordsByInput(getTodayWord());
-        tv_wrd="";
+        tv_wrd = "";
         while (x.moveToNext()) {
 
 //            tv_wrd+=("" + x.getString(0));
 //            tv_wrd+=(System.lineSeparator());
 
-            tv_wrd+=("" + x.getString(1));
-          //  tv_wrd+=(System.lineSeparator());
+            tv_wrd += ("" + x.getString(1));
+            //  tv_wrd+=(System.lineSeparator());
 //            tv_wrd+=("" + x.getString(2));
 //            tv_wrd+=(System.lineSeparator());
 
-            tv_wrd+=(" : " + x.getString(3));
-            tv_wrd+=(System.lineSeparator());
+            tv_wrd += (" : " + x.getString(3));
+            tv_wrd += (System.lineSeparator());
 
 //            tv_wrd+=("" + x.getString(4));
 //            tv_wrd+=(System.lineSeparator());
@@ -100,6 +106,71 @@ public class UiDbFetcher {
         }
 
         return tv_wrd;
+    }
+
+
+    public JSONArray searchWord(String sen) {
+        Cursor x = mDbHelper.searchWordsByInput(sen);
+        JSONArray words = new JSONArray();
+
+        HashMap<String, Boolean> unique = new HashMap<>();
+
+        while (x.moveToNext()) {
+
+
+            if (unique.get(x.getString(1)) != null) {
+
+            } else {
+                JSONObject word = new JSONObject();
+
+                Log.d(">>>", x.toString());
+
+//            tv_wrd+=("" + x.getString(0));
+//            tv_wrd+=(System.lineSeparator());
+
+
+                try {
+                    word.put("0", x.getString(0));
+                    word.put("1", x.getString(1));
+                    word.put("3", x.getString(3));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                //  tv_wrd+=(System.lineSeparator());
+//            tv_wrd+=("" + x.getString(2));
+//            tv_wrd+=(System.lineSeparator());
+
+
+//            tv_wrd+=("" + x.getString(4));
+//            tv_wrd+=(System.lineSeparator());
+//
+//            tv_wrd+=("" + x.getString(5));
+//            tv_wrd+=(System.lineSeparator());
+//
+//            tv_wrd+=("" + x.getString(6));
+//            tv_wrd+=(System.lineSeparator());
+
+                words.put(word);
+                unique.put(x.getString(1), true);
+
+            }
+
+        }
+
+        return words;
+    }
+
+
+    public boolean isWord(String sen) {
+        Cursor x = mDbHelper.searchWordsByDirectInput(sen);
+
+        while (x.moveToNext()) {
+
+            return true;
+
+        }
+
+        return false;
     }
 
 

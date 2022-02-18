@@ -71,7 +71,25 @@ public class KnowledgeBaseAdapter {
 
 
 
+
+    public String buildQueryForDirectWord(String args){
+
+
+
+        String sql ="";
+
+            sql+= "SELECT * from jp_dic where eng match \""+args+"\" UNION ALL ";
+            sql+= "SELECT * from jp_dic where kanji match \""+args+"\" UNION ALL ";
+            sql+= "SELECT * from jp_dic where hiragana match \""+args+"\" limit 50  " ;
+
+
+        return  sql;
+    }
+
+
     public String buildQueryForSentences(String[] args){
+
+
 
         String sql ="";
         for (int i = 0; i <args.length ; i++) {
@@ -106,6 +124,22 @@ public class KnowledgeBaseAdapter {
     public Cursor searchWordsByInput(String q) {
         try {
             String sql=buildQueryForSentences(q.split(" "));
+
+            Log.d(">>>" , sql);
+            Cursor mCur = dDb.rawQuery(sql, null);
+            if (mCur != null) {
+                mCur.moveToNext();
+            }
+            return mCur;
+        } catch (SQLException mSQLException) {
+            Log.e(TAG, "getTestData >>"+ mSQLException.toString());
+            throw mSQLException;
+        }
+    }
+
+    public Cursor searchWordsByDirectInput(String q) {
+        try {
+            String sql=buildQueryForDirectWord(q);
 
             Log.d(">>>" , sql);
             Cursor mCur = dDb.rawQuery(sql, null);
